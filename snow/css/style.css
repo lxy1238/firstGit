@@ -1,0 +1,82 @@
+*{
+    margin:0;
+    padding:0;
+
+}
+.caroucel{
+    position: relative;
+
+    width:720px;
+    height:382px;
+    /*background: #000;   这个颜色是用来测试用的*/
+}
+/*#images{*/
+    /*position:relative ;      加了这个属性会导致后面的div#tabs 完全显示不出来  属性设置也完全无效，原因未知*/
+/*}*/
+.image{
+    position: absolute;
+    width:100%;
+    height:100%;
+}
+.image img{
+    width: 100%;
+    height:100%;
+    /*width:720px;*/
+    /*height:382px;*/
+}
+.btn{
+    position: absolute;
+    height:90px;
+    width:60px;
+    background:rgba(0,0,0,.2);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000,endColorstr=#33000000);  /*兼容IE8 的不支持rgba属性写法*/
+    color:white;
+    text-align: center;
+    line-height: 90px;
+    font-size:60px;
+    top:50%;
+    margin-top: -45px;
+    cursor: pointer;
+    display: none;
+}
+.btn1:after{
+    content: '<';
+}
+.btn2:after{
+    content: '>';
+}
+.btn:hover{
+    background: rgba(0,0,0,.5);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000);
+}
+.btn2{
+    /*left:660px;*/
+    right:0;
+}
+.caroucel #tabs{
+    position: absolute;
+    z-index: 1000;
+    top: 85%;
+    left:43%;
+}
+.caroucel .tab{
+    width:10px;
+    height:10px;
+	color:transparent;
+    background: white;
+    float: left;
+    margin-right:10px;
+    text-align: center;
+    line-height: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+	position:relative;
+	behavior: url(js/PIE.htc);  
+}
+.caroucel .bg{
+    background: #6f7671;
+}
+.hidden{
+    display: none;
+    visibility: hidden;
+}
