@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Multi-JSON-to-HTML</title>
+</head>
+<body>
+  <input type="file" id="files" webkitdirectory directory>
+  <script>
+    window.onload = function () {
+    let inputElement = document.getElementById("files");
+    inputElement.addEventListener("change", handleFiles, false);
+    let style = `
+    table {      border: 1px solid black;      font-size: 12px;    }    th {      background-color: #ddd;      padding: 10px;      border: 1px solid black;    }    td {      padding: 10px;      border: 1px solid black;    }    tr {      border: none;    } 
+    `
+    function handleFiles() {
+      console.log(document.getElementById("files").files)
+      for(let index = 0; index < Array.from(document.getElementById("files").files).length; index++) {
+      let selectedFile = Array.from(document.getElementById("files").files)[index];
+      let name = selectedFile.name.replace('.json', '');
+      let size = selectedFile.size;
+      let reader = new FileReader();
+        reader.readAsText(selectedFile);
+        reader.onload = function(){
+          var json = JSON.parse(this.result);
+          let nameArr = []
+          let trString = ''
+          for (let i in json) {
+            nameArr.push(i)
+            if (Object.prototype.toString.call(json[i]).includes('Array')) {
+              let arrString = ''
+              for(let j of json[i]) {
+                arrString += `
+                  <li>${j}</li>
+                `
+              }
+              trString += `
+              <tr><th>${i}</th><td><ul>${arrString}</ul></td></tr>
+              `
+            } 
+             else if (Object.prototype.toString.call(json[i]).includes('Object')) {
+              let arrString = ''
+              for(let k in json[i]) {
+                arrString += `
+                <tr><th>${k}</th><td>${json[i][k]}</td></tr>
+                `
+              }
+              trString += `
+              <tr><th>${i}</th><td><table border="1" cellspacing="0"  cellpadding="0">${arrString}</table></td></tr>
+              `
+            }
+            else {
+              trString += `
+                <tr><th>${i}</th><td>${json[i]}</td></tr>
+              `
+            }
+          }
+          let blob = new Blob([
+            `<html>
+                <head>
+                  <style>
+                  ${style}
+                  </style>
+                </head>
+                <body>
+                  <table border="1" cellspacing="0"  cellpadding="0">
+                    ${trString}
+                  </table>
+                </body>
+            </html>`
+          ]);
+          setTimeout(() => {
+            let a = document.createElement("a");
+            a.href = window.URL.createObjectURL(blob);
+            a.id = `${name}`
+            a.download = `${name}.html`;
+            // a.textContent = "导出html文件";
+            document.body.appendChild(a);
+            document.getElementById(`${name}`).click()
+            document.body.removeChild(document.getElementById(`${name}`))
+          },300*index)
+        }
+      }
+      }
+    }
+  </script>
+</body>
+</html>
