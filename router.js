@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld';
 const mainPage = () => import('@/page/main/main')
+const Routes = []
 const globalRoutes = [
   {
     path: '/',
@@ -22,35 +23,18 @@ files.keys().forEach(res => {
   const path = res.replace(/(\.|vue)/g, '')
   const arr = path.split('/')
   const name =arr.pop()
-  if(arr.length === 1){
-    globalRoutes.push(
-      {
-        path: path.replace('_', ':'),
-        name: name,
-        component: () => import(`@/page${path}`)
-      }
-    )
-    return
-  } 
   const moduleName = arr.pop()
+  const component = {
+    path: path.replace('_', ':'),
+    name: name,
+    component: () => import(`@/page${path}`)
+  }
   globalRoutes.forEach((v, i) => {
     if (v.name === name) return
-    if (v.name === moduleName && v.name === name) {
-      globalRoutes[i].children.push(
-        {
-          path: path.replace('_', ':'),
-          name: name,
-          component: () => import(`@/page${path}`)
-        }
-      )
+    if (v.name === moduleName) {
+      globalRoutes[i].children.push(component)
     } else {
-      globalRoutes.push(
-        {
-          path: path.replace('_', ':'),
-          name: name,
-          component: () => import(`@/page${path}`)
-        }
-      )
+      Routes.push(component)
     }
   })
 })
@@ -58,7 +42,7 @@ Vue.use(Router)
 
 const router = new Router({
 
-  routes: globalRoutes
+  routes: globalRoutes.concat(Routes)
 })
 
 export default router
